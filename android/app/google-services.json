@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "461864047128",
+    "project_id": "channelflow-4e2da",
+    "storage_bucket": "channelflow-4e2da.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461864047128:android:27ba105fa34c2b779ce96d",
+        "android_client_info": {
+          "package_name": "com.channelflow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461864047128-ertvs0f2pubhca6hjtg9nel00tsrilct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.channelflow",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "461864047128-ojf00u5k7u90q8iqpijk81gc7eo8omma.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.channelflow",
+            "certificate_hash": "f33f7d6cd2663c9276902816df5beb4aa29481f4"
+          }
+        },
+        {
+          "client_id": "461864047128-rfqao3p00c26nvrq5ks56v1a69tas2jq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeRn7C2mCJ1kzy_BVDMa5KuJp5jGIM2y0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461864047128-rfqao3p00c26nvrq5ks56v1a69tas2jq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
