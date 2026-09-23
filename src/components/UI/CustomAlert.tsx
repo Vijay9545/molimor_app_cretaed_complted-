@@ -13,8 +13,12 @@ interface CustomAlertProps {
   visible: boolean;
   title: string;
   message: string;
-  type: 'success' | 'error' | 'info';
+  type: 'success' | 'error' | 'info' | 'warning';
   onClose: () => void;
+  showCancel?: boolean;
+  onConfirm?: () => void;
+  confirmText?: string;
+  cancelText?: string;
 }
 
 export const CustomAlert: React.FC<CustomAlertProps> = ({
@@ -23,6 +27,10 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({
   message,
   type,
   onClose,
+  showCancel = false,
+  onConfirm,
+  confirmText = 'OK',
+  cancelText = 'Cancel',
 }) => {
   const [alertScale] = useState(new Animated.Value(0));
 
@@ -48,6 +56,17 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({
     });
   };
 
+  const handleConfirm = () => {
+    Animated.timing(alertScale, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      if (onConfirm) onConfirm();
+      else onClose();
+    });
+  };
+
   const getIconConfig = () => {
     switch (type) {
       case 'success':
@@ -63,6 +82,13 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({
           color: '#d32f2f',
           bgColor: '#ffeeee',
           btnBg: '#ff3b30',
+        };
+      case 'warning':
+        return {
+          name: 'warning' as const,
+          color: '#ed6c02',
+          bgColor: '#fff4e5',
+          btnBg: '#ed6c02',
         };
       default:
         return {
@@ -100,12 +126,30 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({
           </View>
           <Text style={styles.alertTitle}>{title}</Text>
           <Text style={styles.alertMessage}>{message}</Text>
-          <TouchableOpacity
-            style={[styles.alertButton, { backgroundColor: config.btnBg }]}
-            onPress={handleClose}
-          >
-            <Text style={styles.alertButtonText}>OK</Text>
-          </TouchableOpacity>
+          
+          {showCancel ? (
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={[styles.alertButton, styles.cancelButton]}
+                onPress={handleClose}
+              >
+                <Text style={styles.cancelButtonText}>{cancelText}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.alertButton, styles.confirmButton, { backgroundColor: config.btnBg }]}
+                onPress={handleConfirm}
+              >
+                <Text style={styles.alertButtonText}>{confirmText}</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={[styles.alertButton, { backgroundColor: config.btnBg }]}
+              onPress={handleClose}
+            >
+              <Text style={styles.alertButtonText}>OK</Text>
+            </TouchableOpacity>
+          )}
         </Animated.View>
       </View>
     </Modal>
@@ -158,6 +202,26 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    gap: 12,
+  },
+  cancelButton: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  confirmButton: {
+    flex: 1,
+  },
+  cancelButtonText: {
+    color: '#666',
+    fontSize: 16,
+    fontWeight: '600',
   },
   alertButtonText: {
     color: '#fff',

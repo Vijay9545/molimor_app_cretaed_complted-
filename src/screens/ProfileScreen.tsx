@@ -90,7 +90,10 @@ export const ProfileScreen: React.FC = () => {
     visible: boolean;
     title: string;
     message: string;
-    type: 'success' | 'error' | 'info';
+    type: 'success' | 'error' | 'info' | 'warning';
+    showCancel?: boolean;
+    onConfirm?: () => void;
+    confirmText?: string;
   }>({
     visible: false,
     title: '',
@@ -98,8 +101,15 @@ export const ProfileScreen: React.FC = () => {
     type: 'info',
   });
  
-  const showAlert = (title: string, message: string, type: 'success' | 'error' | 'info' = 'info') => {
-    setAlertConfig({ visible: true, title, message, type });
+  const showAlert = (
+    title: string, 
+    message: string, 
+    type: 'success' | 'error' | 'info' | 'warning' = 'info',
+    showCancel = false,
+    onConfirm?: () => void,
+    confirmText?: string
+  ) => {
+    setAlertConfig({ visible: true, title, message, type, showCancel, onConfirm, confirmText });
   };
  
   const hideAlert = () => {
@@ -238,32 +248,32 @@ export const ProfileScreen: React.FC = () => {
 
   // 🚀 Logout
   const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to logout?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            await AsyncStorage.removeItem('userData');
-            await AsyncStorage.removeItem('authToken');
-            setToken(null);
+    showAlert(
+      'Logout',
+      'Are you sure you want to logout?',
+      'warning',
+      true,
+      async () => {
+        try {
+          await AsyncStorage.removeItem('userData');
+          await AsyncStorage.removeItem('authToken');
+          setToken(null);
 
-            // Navigate to login screen - you'll need to implement navigation
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: 'Login' }],
-              }),
-            );
+          // Navigate to login screen
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            }),
+          );
 
-            Alert.alert('Success', 'Logged out successfully');
-          } catch (err) {
-            Alert.alert('Error', 'Failed to logout');
-          }
-        },
+          showAlert('Success', 'Logged out successfully', 'success');
+        } catch (err) {
+          showAlert('Error', 'Failed to logout', 'error');
+        }
       },
-    ]);
+      'Logout'
+    );
   };
  
   // 🚀 Contact Support
@@ -631,6 +641,9 @@ export const ProfileScreen: React.FC = () => {
         message={alertConfig.message}
         type={alertConfig.type}
         onClose={hideAlert}
+        showCancel={alertConfig.showCancel}
+        onConfirm={alertConfig.onConfirm}
+        confirmText={alertConfig.confirmText}
       />
     </KeyboardAvoidingView>
   );
